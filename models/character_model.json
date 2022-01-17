@@ -1,0 +1,10 @@
+{
+    "name": null,
+    "hp": 300,
+    "mana": 100,
+    "money": 300,
+    "clas": null,
+    "currentLocation": "EAGLE TOWN",
+    "eq": {},
+    "seenFightingLocation": []
+}

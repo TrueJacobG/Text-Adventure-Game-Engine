@@ -1,0 +1,3 @@
+reset -> delete character.json
+hints -> maps folder -> hints
+twitter.com/TrueJacobG
