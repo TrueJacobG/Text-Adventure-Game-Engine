@@ -1,6 +1,3 @@
-### Text Adventure Game (with the engine)
+### Adventure Game
 ##### You can change story.json and create your own game.
-
-##### Language: Polish
-
 ##### GL&HF!
