@@ -5,8 +5,11 @@ from random import randint
 import sys
 from time import sleep
 
+from typing import Union
+
 from .game import Game
 from .enemy import Enemy
+from .console import *
 
 
 class Character:
@@ -19,11 +22,11 @@ class Character:
                 json.dump(character, f)
 
             name, clas, weapon, armor, difficulty = self.play_intro()
-            self.name = name
-            self.clas = clas
-            self.difficulty = difficulty
+            self.name: str = name
+            self.clas: str = clas
+            self.difficulty: int = difficulty
 
-            self.eq = {
+            self.eq: dict[str, dict[str, list[int]]] = {
                 "weapons": weapon,
                 "armors": armor
             }
@@ -32,29 +35,29 @@ class Character:
             with open("character.json") as f:
                 character = json.load(f)
 
-            self.name = character['name']
-            self.clas = character['clas']
-            self.eq = character['eq']
-            self.difficulty = 0.5
+            self.name: str = character['name']
+            self.clas: str = character['clas']
+            self.eq: dict[str, dict[str, list[int]]] = character['eq']
+            self.difficulty: float = 0.5
 
         with open("models/attacks.json") as f:
             attacks = json.load(f)
             self.attacks = attacks[self.clas]
 
-        self.hp = character['hp']
-        self.mana = character['mana']
-        self.money = character['money']
-        self.currentLocation = character['current_location']
-        self.seenFightingLocation = character['seenFightingLocation']
+        self.hp: float = character['hp']
+        self.mana: float = character['mana']
+        self.money: int = character['money']
+        self.currentLocation: str = character['current_location']
+        self.seenFightingLocation: list[str] = character['seenFightingLocation']
 
     @staticmethod
-    def play_intro(*args):
+    def play_intro() -> (str, str, dict[str, list[int]], dict[str, list[int]], float):
         print("Witaj! Musisz stworzyc swoja postac!")
         print("Podaj swoje imie poszukiwaczu przygod: ")
-        name = input()
+        name: str = input()
         print("Podaj poziom trudnosci: <1> <2> <3>")
         print("1. Latwy 2. Normalny 3. Trudny")
-        difficulty = input()
+        difficulty: float = input()
         if difficulty == 1:
             difficulty = 0.5
         elif difficulty == 2:
@@ -63,24 +66,23 @@ class Character:
             difficulty = 1.2
 
         print("Wybierz klase: ")
-        clas = input("1. <Wojownik> 2. <Lucznik> 3. <Mag>\n\n")
+        clas: str = input("1. <Wojownik> 2. <Lucznik> 3. <Mag>\n\n")
         if clas == str(1) or clas.lower() == "wojownik":
-            clas = "Wojownik"
-            weapon = {"Zwykly miecz": [80, 10]}
-            armor = {"Zwykla tarcza": [80, 10]}
+            clas: str = "Wojownik"
+            weapon: dict[str, list[int]] = {"Zwykly miecz": [80, 10]}
+            armor: dict[str, list[int]] = {"Zwykla tarcza": [80, 10]}
         elif clas == str(2) or clas.lower() == "lucznik":
-            clas = "Lucznik"
-            weapon = {"Zwykly luk": [80, 10]}
-            armor = {"Dziwny naszyjnik": [80, 10]}
+            clas: str = "Lucznik"
+            weapon: dict[str, list[int]] = {"Zwykly luk": [80, 10]}
+            armor: dict[str, list[int]] = {"Dziwny naszyjnik": [80, 10]}
         else:
-            clas = "Mag"
-            weapon = {"Stara rozdzka": [80, 10]}
-            armor = {"Slomiany kapelusz": [80, 10]}
+            clas: str = "Mag"
+            weapon: dict[str, list[int]] = {"Stara rozdzka": [80, 10]}
+            armor: dict[str, list[int]] = {"Slomiany kapelusz": [80, 10]}
 
-        print(
-            "\n Swietnie! Decyzje dokonujesz poprzez wpisanie odpowiedniego wyboru lub numeru. Jesli chcesz zamknac gre wpisz QUIT. Pomoc -> help")
+        print("\n Swietnie! Decyzje dokonujesz poprzez wpisanie odpowiedniego wyboru lub numeru. Jesli chcesz zamknac gre wpisz QUIT. Pomoc -> help")
 
-        wait = input()
+        wait: any = input()
 
         return name, clas, weapon, armor, difficulty
 
@@ -88,14 +90,14 @@ class Character:
         with open("character.json") as f:
             character = json.load(f)
 
-        character['name'] = self.name
-        character['clas'] = self.clas
-        character['hp'] = self.hp
-        character['mana'] = self.mana
-        character['money'] = self.money
-        character['current_location'] = self.currentLocation
-        character['seenFightingLocation'] = self.seenFightingLocation
-        character['eq'] = self.eq
+        character['name']: str = self.name
+        character['clas']: str = self.clas
+        character['hp']: float = self.hp
+        character['mana']: float = self.mana
+        character['money']: int = self.money
+        character['current_location']: str = self.currentLocation
+        character['seenFightingLocation']: list[str] = self.seenFightingLocation
+        character['eq']: dict[str, dict[str, list[int]]] = self.eq
 
         with open("character.json", "w") as f:
             json.dump(character, f)
@@ -103,15 +105,15 @@ class Character:
     @staticmethod
     def delete_character():
         print("UMARLES! (Twoja postac zostanie usunieta za chwile)")
-        wait = input()
+        wait: any = input()
         os.remove("character.json")
         sleep(1)
         sys.exit(1)
 
     def print_eq(self):
         print("W twoim plecaku znajduja sie: \n")
-        weapons = []
-        armors = []
+        weapons: list[list[str]] = []
+        armors: list[list[str]] = []
 
         for weaponType in self.eq.items():
             if weaponType[0] == "weapons":
@@ -120,28 +122,28 @@ class Character:
                 armors.append(list(weaponType[1].items()))
 
         nr = 0
-        print("\033[94mBronie:\033[0m")
+        printc("Bronie:", "blue")
         for item in weapons[0]:
             nr += 1
-            print(
-                f"\033[93m{nr}. {item[0]}\033[0m  -  Att/Obr: {item[1][0]} Wyt: {item[1][1]}")
+            printc(f"{nr}. {item[0]}", "yellow")
+            printc("Att/Obr: {item[1][0]} Wyt: {item[1][1]}")
 
         nr = 0
-        print("\n \033[94mZbroje:\033[0m")
+        printc("Zbroje:", "blue")
         for item in armors[0]:
             nr += 1
-            print(
-                f"\033[93m{nr}. {item[0]}\033[0m  -  Att/Obr: {item[1][0]} Wyt: {item[1][1]}")
+            printc(f"{nr}. {item[0]}", "blue")
+            printc("Att/Obr: {item[1][0]} Wyt: {item[1][1]}")
 
         print("\nChcesz zmienic swoja glowna bron i zbroje?")
         print("<TAK> <NIE>")
-        decision = input()
-        if decision.lower() == "tak" or decision == 1:
+        decision: str = input()
+        if decision.lower() == "tak" or decision == str(1):
             self.rearrange_eq(weapons[0], armors[0])
         return
 
     def fight(self, current_location, difficulty, game):
-        enemy = Enemy(current_location, difficulty, game.story)
+        enemy: Enemy = Enemy(current_location, difficulty, game.story)
         coins_for_fight = enemy.hp
         defense = self.hp // 14 * self.difficulty
         while True:
