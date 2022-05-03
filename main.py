@@ -3,8 +3,7 @@ import json
 import sys
 from time import sleep
 
-from lib import Game
-from lib import Character
+from lib import *
 
 
 # twitter.com/TrueJacobG
@@ -13,8 +12,8 @@ def play(player, game_obj):
     # variables
     text, directions, options, options_type = Game.get_information(game_obj, player)
 
-    if game_obj.story[player.currentLocation][
-        "fightingLocation"] and player.currentLocation not in player.seenFightingLocation:
+    if game_obj.story[player.currentLocation]["fightingLocation"] and \
+            player.currentLocation not in player.seenFightingLocation:
 
         player.mana_regeneration()
 
@@ -30,7 +29,7 @@ def play(player, game_obj):
                 game_obj, player)
             break
 
-    Game.print_screen(text, player.hp,
+    print_screen(text, player.hp,
                       player.mana, player.money, options, player.currentLocation)
 
     decision = input()
@@ -38,14 +37,14 @@ def play(player, game_obj):
     while flag:
         if decision.lower() == "quit":
             player.save_character()
-            Game.clear_console()
+            clear_console()
             print("Do zobaczenia niedługo :D")
             sleep(1)
-            Game.clear_console()
+            clear_console()
             flag = False
             sys.exit()
         if decision.lower() == "help":
-            Game.print_help()
+            print_help()
             print("Co chcesz zrobić?")
             decision = input()
             continue
@@ -64,7 +63,7 @@ def play(player, game_obj):
 
 
 def main():
-    Game.terminal_size()
+    terminal_size()
 
     with open("story.json") as f:
         story = json.load(f)
